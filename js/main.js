@@ -10,7 +10,7 @@ $submitButton.addEventListener('click', function (event) {
   // Get the input value from the textarea
   const definition = $defInput.value;
 
-  if (definition.trim() === '') {
+  if (definition.length === 0) {
     alert('Please enter a definition.'); // Add validation for empty input
     return;
   }

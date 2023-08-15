@@ -51,6 +51,7 @@ header {
 /* START OF MAIN STYLES */
 #promt {
   font-family: Exo, sans-serif;
+  padding-left: 0.5rem;
 }
 
 #def {
@@ -64,6 +65,7 @@ textarea {
   font-family: Exo, sans-serif;
   text-transform: uppercase;
   width: 100%;
+  padding: 0.7rem;
 }
 
 /* END OF MAIN STYLES */
@@ -85,4 +87,18 @@ textarea {
   cursor: pointer;
 }
 
+/* Update the .bottom-search class */
+
+.bottom-search {
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  padding: 3.5rem;
+
+  /* Add some padding for spacing */
+
+  /* }
+
 /* END OF SAVE BUTTON STYLES */
+}
