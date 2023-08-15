@@ -1,0 +1,49 @@
+/* START OF HEADER STYLES */
+header {
+  font-family: Exo, sans-serif;
+}
+
+#gray-background {
+  background-color: #d1d0d0;
+}
+
+.header-text {
+  font-family: Exo, sans-serif;
+  margin: 0;
+  padding: 0.7rem;
+  cursor: pointer;
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#nav-button {
+  padding-right: 0.5rem;
+  cursor: pointer;
+}
+
+/* hide mobile version by default */
+.logo .mobile {
+  display: none;
+}
+
+/* when screen is less than 600px wide
+    show mobile version and hide desktop */
+@media only screen and (width <= 400px) {
+  .logo .mobile {
+    display: block;
+  }
+
+  .logo .desktop {
+    display: none;
+  }
+
+  textarea {
+    width: 100%;
+  }
+}
+
+/* END OF HEADER STYLES */
