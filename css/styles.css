@@ -50,7 +50,8 @@ header {
 /* END OF HEADER STYLES */
 
 /* START OF MAIN STYLES */
-#promt {
+#type-def-promt,
+#click-words-to-save-promt {
   font-family: Exo, sans-serif;
   padding-left: 0.5rem;
 }

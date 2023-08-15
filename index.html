@@ -28,7 +28,7 @@
     <form id="input-form" data-view="entry-form">
       <div class="row">
         <div class="column-full">
-          <p id="promt"> TYPE YOUR DEFINITION HERE: </p>
+          <p id="type-def-promt"> TYPE YOUR DEFINITION HERE: </p>
           <textarea id="def" name="definition" rows="5" cols="94" required></textarea>
         </div>
       </div>
@@ -40,6 +40,15 @@
         </div>
       </div>
     </form>
+    <div data-view="list-words-options">
+      <div class="row">
+        <div class="column-full">
+          <p id="click-words-to-save-promt">CLICK THE WORDS YOU LIKE TO SAVE:</p>
+        </div>
+      </div>
+      <ul id="entries-list">
+      </ul>
+    </div>
   </main>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
