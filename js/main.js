@@ -1,5 +1,5 @@
 // Get references to HTML elements
-// const $form = document.getElementById('input-form');
+const $form = document.getElementById('input-form');
 const $submitButton = document.querySelector('.submit-button');
 const $defInput = document.querySelector('#def');
 const $entriesList = document.querySelector('#options-list');
@@ -121,6 +121,14 @@ function toggleSubmitButton(visible) {
   }
 }
 
+function toggleOptions(visible) {
+  if (visible) {
+    $entriesList.removeAttribute('hidden');
+  } else {
+    $entriesList.setAttribute('hidden', 'true');
+  }
+}
+
 // Defining an array to store selected button texts
 const selectedButtons = [];
 
@@ -166,7 +174,13 @@ function renderOptions(options) {
 }
 
 // Add a click event listener to the 'SAVE WORDS' button
-$saveWord.addEventListener('click', function () {});
+$saveWord.addEventListener('click', function () {
+  // Clear the input and reset the form
+  $defInput.value = '';
+  $form.reset();
+  toggleSubmitButton(false);
+  toggleOptions(false);
+});
 
 // Addding a 'click' event listener to the submit button
 $submitButton.addEventListener('click', handleSubmit);
