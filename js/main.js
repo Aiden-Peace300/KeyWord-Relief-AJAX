@@ -2,6 +2,9 @@
 // const $form = document.getElementById('input-form');
 const $submitButton = document.querySelector('.submit-button');
 const $defInput = document.querySelector('#def');
+const $saveWord = document.querySelector('#toggle');
+
+toggleSubmitButton(false);
 
 // Function to make a request to the OpenAI API using XMLHttpRequest
 function getMsgData(name) {
@@ -68,6 +71,8 @@ async function handleSubmit(event) {
     // Call the API function and handle the response
     const arrayOfOptions = await getMsgData('GIVE ME A LIST OF 5 WORDS or SYNONYMES (9-college grade level) AND A SIMPLE DEF OF EACH OF THEM THAT MAY MATCH THIS DEF: (NO EXTRA PROMT MESSAGE JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!)' + definition);
 
+    toggleSubmitButton(true);
+
     // Create a new entry object
     const newEntry = {
       entryId: data.nextEntryId,
@@ -103,6 +108,14 @@ function MsgGetCutIntoFivePieces(entry) {
   }
 
   return arrayOfOptions;
+}
+
+function toggleSubmitButton(visible) {
+  if (visible) {
+    $saveWord.removeAttribute('hidden');
+  } else {
+    $saveWord.setAttribute('hidden', 'true');
+  }
 }
 
 // Addding a 'click' event listener to the submit button
