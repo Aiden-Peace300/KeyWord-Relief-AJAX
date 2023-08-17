@@ -12,9 +12,7 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
-    // const apiKeyTest = process.env.APIKEY;
-    // alert(apiKeyTest);
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configure the request
@@ -71,7 +69,7 @@ async function handleSubmit(event) {
   }
 
   try {
-    const prompt = "'GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION: (MOST IMPORTANT THING IS NO EXTRA PROMT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!)";
+    const prompt = "'(MOST IMPORTANT THING IS NO EXTRA PROMT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!) GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION:";
     // Call the API function and handle the response
     const arrayOfOptions = await getMsgData(prompt + definition);
 
