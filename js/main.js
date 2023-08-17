@@ -1,10 +1,19 @@
 // Get references to HTML elements
-const $form = document.getElementById('input-form');
+const $form = document.querySelector('#input-form');
+const $logo = document.querySelector('.logo');
 const $submitButton = document.querySelector('.submit-button');
 const $defInput = document.querySelector('#def');
 const $entriesList = document.querySelector('#options-list');
 const $saveWord = document.querySelector('#toggle');
+const $navButton = document.querySelector('#nav-button');
+const $entryForm = document.querySelector('[data-view="entry-form"]');
+const $navLinks = document.querySelector('[data-view="nav-links"]');
+const $homeLink = document.querySelector('#home-button');
+const $backgroundColor = document.querySelector('.background-body-color');
+const $headerBottomBorder = document.querySelector('#border');
 
+// const $listOfWordsOptions = document.querySelector('data-view="list-words-options"');
+const $selectOptionsPromt = document.querySelector('#click-words-to-save-promt');
 toggleSubmitButton(false);
 
 // Function to make a request to the OpenAI API using XMLHttpRequest
@@ -12,7 +21,7 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configure the request
@@ -130,6 +139,53 @@ function toggleOptions(visible) {
   }
 }
 
+function handleNavIconClicked(event) {
+  if (event.target.tagName === 'I') {
+    $backgroundColor.classList.remove('background-body-color');
+    $backgroundColor.classList.add('nav-background');
+    $headerBottomBorder.classList.add('bottom-border');
+    $entryForm.setAttribute('hidden', 'true');
+    $selectOptionsPromt.setAttribute('hidden', 'true');
+    $navLinks.removeAttribute('hidden');
+  } else {
+    $entryForm.removeAttribute('hidden');
+    $navLinks.setAttribute('hidden', 'true');
+  }
+}
+
+// viewSwap() Function to switch between views (entry-form and entries)
+function viewSwap(nameOfView) {
+  // Showing the view whose name was provided as an argument
+  // if (nameOfView === 'saved-words') {
+  //   $entryForm.removeAttribute('hidden');
+  //   $saveWord.setAttribute('hidden', 'true');
+  // } else
+  if (nameOfView === 'entry-form') {
+    $entryForm.removeAttribute('hidden');
+    $selectOptionsPromt.removeAttribute('hidden');
+    $navLinks.setAttribute('hidden', 'true');
+    $headerBottomBorder.classList.remove('bottom-border'); // Remove the class here
+  }
+
+  // Updating the data.view property to track the currently shown view
+  data.view = nameOfView;
+}
+
+function handleHomeButtonClick(event) {
+  $backgroundColor.classList.remove('nav-background');
+  $backgroundColor.classList.add('background-body-color');
+  viewSwap('entry-form');
+}
+
+function handleLogoClick(event) {
+  $backgroundColor.classList.remove('nav-background');
+  $backgroundColor.classList.add('background-body-color');
+  viewSwap('entry-form');
+}
+
+$homeLink.addEventListener('click', handleHomeButtonClick);
+$logo.addEventListener('click', handleLogoClick);
+
 // Defining an array to store selected button texts
 const selectedButtons = [];
 
@@ -201,3 +257,6 @@ $saveWord.addEventListener('click', function () {
 
 // Adding a 'click' event listener to the submit button
 $submitButton.addEventListener('click', handleSubmit);
+
+// Adding a 'click' event listener to the submit button
+$navButton.addEventListener('click', handleNavIconClicked);
