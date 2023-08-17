@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AJAX Project</title>
+  <title>KeyWord Relief AJAX</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -12,6 +13,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Exo&display=swap" rel="stylesheet" type="text/css" />
 </head>
+
 <body>
   <header id="gray-background">
     <div class="row">
@@ -28,7 +30,7 @@
     <form id="input-form" data-view="entry-form">
       <div class="row">
         <div class="column-full">
-          <p id="promt"> TYPE YOUR DEFINITION HERE: </p>
+          <p id="type-def-promt"> TYPE YOUR DEFINITION HERE: </p>
           <textarea id="def" name="definition" rows="5" cols="94" required></textarea>
         </div>
       </div>
@@ -40,8 +42,24 @@
         </div>
       </div>
     </form>
+    <div data-view="list-words-options">
+      <div class="row">
+        <div class="column-full">
+          <p id="click-words-to-save-promt">CLICK THE WORDS YOU LIKE TO SAVE:</p>
+        </div>
+      </div>
+      <ul id="options-list"></ul>
+      <div class="row">
+        <div class="column-full center-save bottom-search">
+          <div class="save-button">
+            <input class="submit-button" id="toggle" type="submit" value="SAVE WORDS" />
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
 </body>
+
 </html>

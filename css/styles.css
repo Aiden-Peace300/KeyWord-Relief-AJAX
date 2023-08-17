@@ -50,9 +50,41 @@ header {
 /* END OF HEADER STYLES */
 
 /* START OF MAIN STYLES */
-#promt {
+#type-def-promt,
+#click-words-to-save-promt,
+li,
+button {
   font-family: Exo, sans-serif;
   padding-left: 0.5rem;
+}
+
+li {
+  margin-right: 1rem;
+}
+
+button {
+  cursor: pointer;
+  background-color: #d9d9d9;
+  border: none;
+  margin-bottom: 0.5rem;
+  border-radius: 0.4rem;
+  font-size: 1.5rem;
+  text-align: left;
+  width: 100%;
+}
+
+.focus {
+  background-color: #a3cef1;
+}
+
+ul {
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.options-list {
+  padding-left: 0;
+  border-radius: 5rem;
 }
 
 #def {
@@ -74,7 +106,7 @@ textarea {
 /* START OF SAVE BUTTON STYLES */
 .center-save {
   display: flex;
-  justify-content: center;
+  align-self: flex-end;
 }
 
 .submit-button {
@@ -88,18 +120,9 @@ textarea {
   cursor: pointer;
 }
 
-/* Update the .bottom-search class */
-
 .bottom-search {
-  position: absolute;
-  bottom: 0;
   display: flex;
+  align-self: flex-end;
   justify-content: center;
-  padding: 3.5rem;
-
-  /* Add some padding for spacing */
-
-  /* }
-
-/* END OF SAVE BUTTON STYLES */
+  padding: 0.5rem;
 }
