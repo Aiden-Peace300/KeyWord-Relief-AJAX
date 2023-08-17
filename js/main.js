@@ -12,7 +12,7 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configure the request
@@ -69,8 +69,9 @@ async function handleSubmit(event) {
   }
 
   try {
+    const prompt = "'GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION: (MOST IMPORTANT THING IS NO EXTRA PROMT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!)";
     // Call the API function and handle the response
-    const arrayOfOptions = await getMsgData('GIVE ME A LIST OF 5 WORDS or SYNONYMES (9-college grade level) AND A SIMPLE DEF OF EACH OF THEM THAT MAY MATCH THIS DEF: (NO EXTRA PROMT MESSAGE JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!)' + definition);
+    const arrayOfOptions = await getMsgData(prompt + definition);
 
     // Call the renderOptions function to render the options
     renderOptions(arrayOfOptions);
@@ -151,36 +152,52 @@ function renderOptions(options) {
 
   // Looping through each selectable button and attach a click event listener
   $selectableButton.forEach(button => {
+
+    // listening for a click when the button is clicked
+    // and WILL also do some work everytime user clicks a button...
+    // we want to keep the color blue and save to a array (selectedButtons)
+    // IMPORTANT:
+    // but if the user clicks the button and deselect the option
+    // we need to need to take that out of there array and add the one
+    // they just clicked
     button.addEventListener('click', function () {
 
-      // Toggle the 'selected' class for visual indication
-      button.classList.toggle('focus');
-
-      // Get the text content of the clicked button
+      // Getting the text content of the clicked button
       const buttonText = button.textContent;
 
-      // Check if the button was selected or deselected
+      // Check if Option clicked includes (which means "has")
+      // the value of buttonText (which holds the text of the
+      // button clicked)...
       if (selectedButtons.includes(buttonText)) {
-        // If already selected, remove from the array
+        // Remove 'focus' class to deselect the option
+        button.classList.remove('focus');
+        // ... find the position (an integer) of "buttonText" in
+        // the "selectedButtons" list and assign the value to
+        // 'index'...
         const index = selectedButtons.indexOf(buttonText);
+        // ...then remove that element from the selected list
         selectedButtons.splice(index, 1);
-        // button.classList.add('def');
       } else {
         // If not selected, add to the array
         selectedButtons.push(buttonText);
+
+        button.classList.add('focus');
       }
     });
   });
 }
 
-// Add a click event listener to the 'SAVE WORDS' button
+// Adding  a click event listener to the 'SAVE WORDS' button
 $saveWord.addEventListener('click', function () {
+
   // Clear the input and reset the form
   $defInput.value = '';
   $form.reset();
+
+  // once we grab the words they want to keep save them
   toggleSubmitButton(false);
   toggleOptions(false);
 });
 
-// Addding a 'click' event listener to the submit button
+// Adding a 'click' event listener to the submit button
 $submitButton.addEventListener('click', handleSubmit);
