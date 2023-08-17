@@ -12,7 +12,9 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
+    // const apiKeyTest = process.env.APIKEY;
+    // alert(apiKeyTest);
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configure the request

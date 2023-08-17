@@ -73,10 +73,6 @@ button {
   width: 100%;
 }
 
-button:focus {
-  background-color: #a3cef1;
-}
-
 .focus {
   background-color: #a3cef1;
 }
