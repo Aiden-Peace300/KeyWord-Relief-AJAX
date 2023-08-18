@@ -11,7 +11,7 @@ const $navLinks = document.querySelector('[data-view="nav-links"]');
 const $homeLink = document.querySelector('#home-button');
 const $backgroundColor = document.querySelector('.background-body-color');
 const $headerBottomBorder = document.querySelector('#border');
-// const $savedWordsView = document.querySelector('[data-view="saved-words"]');
+const $savedWordsView = document.querySelector('[data-view="saved-words"]');
 
 // const $listOfWordsOptions = document.querySelector('data-view="list-words-options"');
 const $selectOptionsPromt = document.querySelector('#click-words-to-save-promt');
@@ -22,7 +22,7 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configure the request
@@ -148,40 +148,22 @@ function handleNavIconClicked(event) {
     $entryForm.setAttribute('hidden', 'true');
     $selectOptionsPromt.setAttribute('hidden', 'true');
     $navLinks.removeAttribute('hidden');
+    alert('hit');
+    $savedWordsView.setAttribute('hidden', 'true');
   } else {
     $entryForm.removeAttribute('hidden');
     $navLinks.setAttribute('hidden', 'true');
   }
 }
 
-// viewSwap() Function to switch between views (entry-form and entries)
-function viewSwap(nameOfView) {
-  // Showing the view whose name was provided as an argument
-  // if (nameOfView === 'saved-words') {
-  //   $entryForm.removeAttribute('hidden');
-  //   $saveWord.setAttribute('hidden', 'true');
-  // } else
-  if (nameOfView === 'entry-form') {
-    $entryForm.removeAttribute('hidden');
-    $selectOptionsPromt.removeAttribute('hidden');
-    $navLinks.setAttribute('hidden', 'true');
-    $headerBottomBorder.classList.remove('bottom-border'); // Remove the class here
-  }
-
-  // Updating the data.view property to track the currently shown view
-  data.view = nameOfView;
-}
-
 function handleHomeButtonClick(event) {
   $backgroundColor.classList.remove('nav-background');
   $backgroundColor.classList.add('background-body-color');
-  viewSwap('entry-form');
 }
 
 function handleLogoClick(event) {
   $backgroundColor.classList.remove('nav-background');
   $backgroundColor.classList.add('background-body-color');
-  viewSwap('entry-form');
 }
 
 $homeLink.addEventListener('click', handleHomeButtonClick);
@@ -235,7 +217,7 @@ function renderOptions(options) {
         // ...then remove that element from the selected list
         selectedButtons.splice(index, 1);
       } else {
-        // If not selected, add to the array
+        // else add to the array
         selectedButtons.push(buttonText);
 
         button.classList.add('focus');
@@ -253,22 +235,35 @@ function renderKeywordList(savedWords) {
   // Loop through savedWords array in reverse order and create list items
   for (let i = savedWords.length - 1; i >= 0; i--) {
     const savedWord = savedWords[i];
+    const extractedWord = extractWord(savedWord); // Call extractWord here
     const li = document.createElement('li');
     li.classList.add('saved-word'); // Apply the same class as selectable buttons
-    li.textContent = savedWord; // Use the extracted word
+    li.textContent = extractedWord; // Use the extracted word
     $savedWordsList.appendChild(li);
   }
 }
 
-// need to create my extractWord function and DOMContentLoaded to properly call
-renderKeywordList(selectedButtons);
+// Function to extract the word from the saved word format (number. word)
+function extractWord(savedWord) {
+  // Split the saved word by the period
+  const parts = savedWord.split('. ');
+  if (parts.length === 2) {
+    return parts[1]; // Return the second part (the word)
+  } else {
+    return savedWord; // Return the original saved word if format is unexpected
+  }
+}
 
 // Adding  a click event listener to the 'SAVE WORDS' button
 $saveWord.addEventListener('click', function () {
+  renderKeywordList(selectedButtons);
 
-  // Clear the input and reset the form
+  // Clearing the input and reset the form
   $defInput.value = '';
   $form.reset();
+
+  // Saving the selectedButtons array to localStorage
+  localStorage.setItem('savedWords', JSON.stringify(selectedButtons));
 
   // once we grab the words they want to keep save them
   toggleSubmitButton(false);
@@ -277,5 +272,6 @@ $saveWord.addEventListener('click', function () {
 
 // Adding a 'click' event listener to the submit button
 $submitButton.addEventListener('click', handleSubmit);
+
 // Adding a 'click' event listener to the submit button
 $navButton.addEventListener('click', handleNavIconClicked);
