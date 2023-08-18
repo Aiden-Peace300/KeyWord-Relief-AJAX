@@ -17,8 +17,6 @@ header {
 
 .bottom-border {
   border-bottom: 2px solid black;
-
-  /* You can adjust the width and color as needed */
 }
 
 .header-text {
@@ -166,6 +164,7 @@ textarea {
   color: black;
 }
 
+/* FOR DOM TREE */
 .saved-word {
   background-color: #a3cef1;
   border: none;

@@ -12,12 +12,18 @@ const $homeLink = document.querySelector('#home-button');
 const $backgroundColor = document.querySelector('.background-body-color');
 const $headerBottomBorder = document.querySelector('#border');
 const $savedWordsView = document.querySelector('[data-view="saved-words"]');
-
-// const $listOfWordsOptions = document.querySelector('data-view="list-words-options"');
 const $selectOptionsPromt = document.querySelector('#click-words-to-save-promt');
+
 toggleSubmitButton(false);
 
-// Function to make a request to the OpenAI API using XMLHttpRequest
+// *************************************************************************************************//
+
+// ***************************** getMsgData(name) (EVENT LISTENER FUNCTION) ************************//
+// PURPOSE: Function to make a request to the OpenAI API using XMLHttpRequest
+// PARAMETER: 'name' - The user input for the conversation
+// RETURNS: A promise that resolves with processed API response
+
+// AKA: Function to make a request to the OpenAI API using XMLHttpRequest
 function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
@@ -67,7 +73,14 @@ function getMsgData(name) {
   });
 }
 
-// Function to handle form submission
+// *************************************************************************************************//
+
+// ******************************************* getMsgData(name) ************************************//
+// PURPOSE: Function to handle form submission
+// PARAMETER: 'event' - The submit event object
+// RETURNS: None
+
+// AKA: Function to handle form submission
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -105,6 +118,14 @@ async function handleSubmit(event) {
     alert('An error occurred while processing your request.');
   }
 }
+// *************************************************************************************************//
+
+// ******************************* MsgGetCutIntoFivePieces (entry) **********************************//
+// PURPOSE: Function to split an entry into individual definitions
+// PARAMETER: 'entry' - The input entry containing multiple definitions
+// RETURNS: An array of individual definitions
+
+// AKA: Function to handle form submission
 
 function MsgGetCutIntoFivePieces(entry) {
   const definitions = entry.split('\n'); // Split the entry by newline characters
@@ -121,9 +142,14 @@ function MsgGetCutIntoFivePieces(entry) {
 
   return arrayOfOptions;
 }
+// *************************************************************************************************//
 
-// the visible parameter will be a boolean true if you
-// want the user to see the "SAVE WORDS" button
+// *********************************** toggleSubmitButton (visible) ********************************//
+// PURPOSE: Function to toggle the visibility of the submit button
+// PARAMETER: 'visible' - Boolean indicating whether the button should be visible
+// RETURNS: None
+
+// AKA: Function visible ensure the 'save' button is shown when needed
 function toggleSubmitButton(visible) {
   if (visible) {
     $saveWord.removeAttribute('hidden');
@@ -132,6 +158,14 @@ function toggleSubmitButton(visible) {
   }
 }
 
+// *************************************************************************************************//
+
+// ************************************** toggleOptions(visible) ***********************************//
+// PURPOSE: Function to toggle the visibility of the options list
+// PARAMETER: 'visible' - Boolean indicating whether the list should be visible
+// RETURNS: None
+
+// AKA: FINISH ME
 function toggleOptions(visible) {
   if (visible) {
     $entriesList.removeAttribute('hidden');
@@ -140,6 +174,15 @@ function toggleOptions(visible) {
   }
 }
 
+// *************************************************************************************************//
+
+// ************************************ handleNavIconClicked(event) ********************************//
+// PURPOSE: Defining a function called 'handleNavIconClicked' which will ensure that the user only see
+// nav and nothing else!
+// PARAMETER: 'event' - The click event object
+// RETURNS: None
+
+// AKA: Function to handle the navigation icon click event
 function handleNavIconClicked(event) {
   if (event.target.tagName === 'I') {
     $backgroundColor.classList.remove('background-body-color');
@@ -148,31 +191,47 @@ function handleNavIconClicked(event) {
     $entryForm.setAttribute('hidden', 'true');
     $selectOptionsPromt.setAttribute('hidden', 'true');
     $navLinks.removeAttribute('hidden');
-    alert('hit');
     $savedWordsView.setAttribute('hidden', 'true');
   } else {
     $entryForm.removeAttribute('hidden');
     $navLinks.setAttribute('hidden', 'true');
   }
 }
+// *************************************************************************************************//
 
+// ********************************** handleHomeButtonClick(event) ********************************//
+// PURPOSE: Function to handle the home button click event
+// PARAMETER: 'event' - The click event object
+// RETURNS: None
 function handleHomeButtonClick(event) {
   $backgroundColor.classList.remove('nav-background');
   $backgroundColor.classList.add('background-body-color');
 }
 
+// *************************************************************************************************//
+
+// ************************************* handleLogoClick(event) ************************************//
+// PURPOSE: Function to handle the logo click event
+// PARAMETER: 'event' - The click event object
+// RETURNS: None
 function handleLogoClick(event) {
   $backgroundColor.classList.remove('nav-background');
   $backgroundColor.classList.add('background-body-color');
 }
 
-$homeLink.addEventListener('click', handleHomeButtonClick);
-
-$logo.addEventListener('click', handleLogoClick);
-
 // Defining an array to store selected button texts
 const selectedButtons = [];
 
+// *************************************************************************************************//
+
+// ************************************** renderOptions(options) ***********************************//
+// PURPOSE: Defining a function called 'renderOptions' which will generate a DOM tree for each entry
+// in the array, and append that DOM tree to the unordered list. connected to a li(s) to
+// div[data-view="list-words-options"]
+// PARAMETER: 'options' - Array of options to render
+// RETURNS: None
+
+// AKA: Function to render selectable options as buttons though creating a DOM tree
 function renderOptions(options) {
 
   // Clear any existing options
@@ -227,6 +286,17 @@ function renderOptions(options) {
   });
 }
 
+// *************************************************************************************************//
+
+// *********************************** renderKeywordList(savedWords) ********************************//
+// PURPOSE: Defining a function named 'renderKeywordList' with a single parameter. The parameter will
+// need to be selectedButtons array when called. The function should generate and return a DOM tree
+// from the savedWords array each element in that array needs to match the entries you created in
+// the unordered list.
+// PARAMETER: 'savedWords' - Array of saved words
+// RETURNS: None
+
+// AKA: Function to render saved words list by creating a DOM tree
 function renderKeywordList(savedWords) {
   const $savedWordsList = document.querySelector('#saved-words-list');
 
@@ -244,7 +314,15 @@ function renderKeywordList(savedWords) {
   }
 }
 
-// Function to extract the word from the saved word format (number. word)
+// *************************************************************************************************//
+
+// *********************************** renderKeywordList(savedWords) ********************************//
+// PURPOSE: Defining a function called 'extractWord' with a single parameter. which will need to ensure
+// that the listed words don't have numbers attached to them
+// PARAMETER: savedWord (array)
+// RETURNS: returning that
+
+// AKA: Function to extract the word from the saved word format (number. word)
 function extractWord(savedWord) {
   // Split the saved word by the period
   const parts = savedWord.split('. ');
@@ -255,7 +333,12 @@ function extractWord(savedWord) {
   }
 }
 
-// Function to load saved words from localStorage and render them
+// *************************************************************************************************//
+
+// *********************************** loadSavedWords(savedWords) ********************************//
+// PURPOSE: Function to load saved words from localStorage and render them
+// PARAMETER: None
+// RETURNS: None
 function loadSavedWords() {
   const savedWordsJSON = localStorage.getItem('savedWords');
   if (savedWordsJSON) {
@@ -268,6 +351,7 @@ function loadSavedWords() {
     renderKeywordList(extractedWords);
   }
 }
+// *************************************************************************************************//
 
 // Calling loadSavedWords when the document has finished loading
 document.addEventListener('DOMContentLoaded', loadSavedWords);
@@ -293,3 +377,9 @@ $submitButton.addEventListener('click', handleSubmit);
 
 // Adding a 'click' event listener to the submit button
 $navButton.addEventListener('click', handleNavIconClicked);
+
+// Adding a 'click' event listener to the home button
+$homeLink.addEventListener('click', handleHomeButtonClick);
+
+// Adding a 'click' event listener to the keywords list button
+$logo.addEventListener('click', handleLogoClick);
