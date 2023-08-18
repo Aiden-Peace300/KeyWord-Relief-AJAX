@@ -277,6 +277,5 @@ $saveWord.addEventListener('click', function () {
 
 // Adding a 'click' event listener to the submit button
 $submitButton.addEventListener('click', handleSubmit);
-
 // Adding a 'click' event listener to the submit button
 $navButton.addEventListener('click', handleNavIconClicked);
