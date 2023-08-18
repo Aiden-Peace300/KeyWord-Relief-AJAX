@@ -167,6 +167,7 @@ function handleLogoClick(event) {
 }
 
 $homeLink.addEventListener('click', handleHomeButtonClick);
+
 $logo.addEventListener('click', handleLogoClick);
 
 // Defining an array to store selected button texts
@@ -253,6 +254,23 @@ function extractWord(savedWord) {
     return savedWord; // Return the original saved word if format is unexpected
   }
 }
+
+// Function to load saved words from localStorage and render them
+function loadSavedWords() {
+  const savedWordsJSON = localStorage.getItem('savedWords');
+  if (savedWordsJSON) {
+    const savedWords = JSON.parse(savedWordsJSON);
+    selectedButtons.push(...savedWords);
+
+    // Processing saved words to extract the words
+    const extractedWords = savedWords.map(extractWord);
+
+    renderKeywordList(extractedWords);
+  }
+}
+
+// Calling loadSavedWords when the document has finished loading
+document.addEventListener('DOMContentLoaded', loadSavedWords);
 
 // Adding  a click event listener to the 'SAVE WORDS' button
 $saveWord.addEventListener('click', function () {
