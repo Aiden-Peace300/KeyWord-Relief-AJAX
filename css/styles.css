@@ -66,6 +66,7 @@ header {
 /* START OF MAIN STYLES */
 #type-def-promt,
 #click-words-to-save-promt,
+#words-saved-promt,
 li,
 button {
   font-family: Exo, sans-serif;
@@ -163,4 +164,19 @@ textarea {
 .home-button:visited,
 .keywords-button:visited {
   color: black;
+}
+
+.saved-word {
+  background-color: #a3cef1;
+  border: none;
+  margin-bottom: 0.5rem;
+  border-radius: 0.4rem;
+  font-size: 1.5rem;
+  text-align: left;
+  width: 100%;
+}
+
+#words-saved-promt {
+  font-size: 2rem;
+  margin: 0;
 }

@@ -11,6 +11,7 @@ const $navLinks = document.querySelector('[data-view="nav-links"]');
 const $homeLink = document.querySelector('#home-button');
 const $backgroundColor = document.querySelector('.background-body-color');
 const $headerBottomBorder = document.querySelector('#border');
+// const $savedWordsView = document.querySelector('[data-view="saved-words"]');
 
 // const $listOfWordsOptions = document.querySelector('data-view="list-words-options"');
 const $selectOptionsPromt = document.querySelector('#click-words-to-save-promt');
@@ -242,6 +243,25 @@ function renderOptions(options) {
     });
   });
 }
+
+function renderKeywordList(savedWords) {
+  const $savedWordsList = document.querySelector('#saved-words-list');
+
+  // Clear any existing saved words
+  $savedWordsList.textContent = '';
+
+  // Loop through savedWords array in reverse order and create list items
+  for (let i = savedWords.length - 1; i >= 0; i--) {
+    const savedWord = savedWords[i];
+    const li = document.createElement('li');
+    li.classList.add('saved-word'); // Apply the same class as selectable buttons
+    li.textContent = savedWord; // Use the extracted word
+    $savedWordsList.appendChild(li);
+  }
+}
+
+// need to create my extractWord function and DOMContentLoaded to properly call
+renderKeywordList(selectedButtons);
 
 // Adding  a click event listener to the 'SAVE WORDS' button
 $saveWord.addEventListener('click', function () {
