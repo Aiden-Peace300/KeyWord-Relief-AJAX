@@ -31,3 +31,7 @@ function handleStorage(event) {
   // setItem() => store data in the browser's local storage
   localStorage.setItem('Javascript-local-storage', dataJSON);
 }
+
+window.addEventListener('beforeunload', function () {
+  handleStorage(data);
+});

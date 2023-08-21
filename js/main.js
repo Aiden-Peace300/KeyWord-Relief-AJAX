@@ -1,10 +1,11 @@
 // Get references to HTML elements
 const $form = document.querySelector('#input-form');
 const $logo = document.querySelector('.logo');
-const $submitButton = document.querySelector('.submit-button');
+const $searchButton = document.querySelector('.search-button');
+const $save = document.querySelector('.save');
+const $saveButton = document.querySelector('.save-button');
 const $defInput = document.querySelector('#def');
 const $entriesList = document.querySelector('#options-list');
-const $saveWord = document.querySelector('#toggle');
 const $navButton = document.querySelector('#nav-button');
 const $entryForm = document.querySelector('[data-view="entry-form"]');
 const $navLinks = document.querySelector('[data-view="nav-links"]');
@@ -14,7 +15,7 @@ const $headerBottomBorder = document.querySelector('#border');
 const $savedWordsView = document.querySelector('[data-view="saved-words"]');
 const $selectOptionsPromt = document.querySelector('#click-words-to-save-promt');
 
-toggleSubmitButton(false);
+toggleSaveButton(false);
 
 // *************************************************************************************************//
 
@@ -28,7 +29,7 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configure the request
@@ -73,14 +74,16 @@ function getMsgData(name) {
   });
 }
 
+// Defining an array to store selected button texts
+const selectedButtons = [];
+
+let newEntry = {};
 // *************************************************************************************************//
 
 // ******************************************* getMsgData(name) ************************************//
 // PURPOSE: Function to handle form submission
 // PARAMETER: 'event' - The submit event object
 // RETURNS: None
-
-// AKA: Function to handle form submission
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -92,32 +95,72 @@ async function handleSubmit(event) {
   }
 
   try {
-    const prompt = "'(MOST IMPORTANT THING IS NO EXTRA PROMT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!) GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION:";
-    // Call the API function and handle the response
+    const prompt = "'(MOST IMPORTANT THING IS NO EXTRA PROMPT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!) GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION:";
+    // Calling the API function and handle the response
     const arrayOfOptions = await getMsgData(prompt + definition);
 
-    // Call the renderOptions function to render the options
+    $entriesList.textContent = '';
+
+    // Calling the renderOptions function to render the options
     renderOptions(arrayOfOptions);
 
-    toggleSubmitButton(true);
+    toggleSaveButton(true);
 
-    // Create a new entry object
-    const newEntry = {
+    // Create a new entry object with its own copy of selected buttons
+    const entrySelectedButtons = selectedButtons.slice(); // Copy the array
+
+    newEntry = {
       entryId: data.nextEntryId,
       definition,
       response: arrayOfOptions,
-      selectedButtons
+      selectedButtons: entrySelectedButtons,
+      newdate: getCurrentDate()
     };
 
-    // Increment the entry ID and update the entries array
     data.nextEntryId++;
+
+    // Save the newEntry to the data object
     data.entries.unshift(newEntry);
 
+    // Clear the selectedButtons array
+    selectedButtons.length = 0;
+
+    // Save the updated data to local storage
+    const dataJSON = JSON.stringify(data);
+    localStorage.setItem('Javascript-local-storage', dataJSON);
+
+    // Call the renderOptions function with the response array
+    renderOptions(newEntry.response);
+
+    toggleOptions(true);
+
+    // Call the renderKeywordList function with the selected keywords
+    renderKeywordList(newEntry);
+
   } catch (error) {
-    console.error(error);
     alert('An error occurred while processing your request.');
   }
 }
+
+function getCurrentDate() {
+  var monthArray = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const dateObj = new Date();
+  const month = monthArray[dateObj.getUTCMonth()];
+  const day = dateObj.getUTCDate();
+  const year = dateObj.getUTCFullYear();
+
+  // time is in military time
+  const time = ((dateObj.getHours().toString()).length > 1 ? dateObj.getHours() : '0' + dateObj.getHours()) + ':' + ((dateObj.getMinutes().toString()).length > 1 ? dateObj.getMinutes() : '0' + dateObj.getMinutes());
+
+  const newdate = month + ' ' + day + ' ' + year + '   ' + time;
+
+  return newdate;
+}
+
 // *************************************************************************************************//
 
 // ******************************* MsgGetCutIntoFivePieces (entry) **********************************//
@@ -150,11 +193,11 @@ function MsgGetCutIntoFivePieces(entry) {
 // RETURNS: None
 
 // AKA: Function visible ensure the 'save' button is shown when needed
-function toggleSubmitButton(visible) {
+function toggleSaveButton(visible) {
   if (visible) {
-    $saveWord.removeAttribute('hidden');
+    $save.removeAttribute('hidden'); // show save button
   } else {
-    $saveWord.setAttribute('hidden', 'true');
+    $save.setAttribute('hidden', 'true'); // hide save button
   }
 }
 
@@ -164,8 +207,6 @@ function toggleSubmitButton(visible) {
 // PURPOSE: Function to toggle the visibility of the options list
 // PARAMETER: 'visible' - Boolean indicating whether the list should be visible
 // RETURNS: None
-
-// AKA: FINISH ME
 function toggleOptions(visible) {
   if (visible) {
     $entriesList.removeAttribute('hidden');
@@ -187,16 +228,40 @@ function handleNavIconClicked(event) {
   if (event.target.tagName === 'I') {
     $backgroundColor.classList.remove('background-body-color');
     $backgroundColor.classList.add('nav-background');
+    $save.setAttribute('hidden', 'true');
     $headerBottomBorder.classList.add('bottom-border');
     $entryForm.setAttribute('hidden', 'true');
     $selectOptionsPromt.setAttribute('hidden', 'true');
     $navLinks.removeAttribute('hidden');
     $savedWordsView.setAttribute('hidden', 'true');
+    toggleOptions(false);
   } else {
     $entryForm.removeAttribute('hidden');
     $navLinks.setAttribute('hidden', 'true');
   }
 }
+
+function viewSwap(nameOfView) {
+  if (nameOfView === 'entry-form') {
+    $entryForm.removeAttribute('hidden');
+    $selectOptionsPromt.removeAttribute('hidden');
+    $navLinks.setAttribute('hidden', 'true');
+    $save.setAttribute('hidden', 'true');
+    $headerBottomBorder.classList.remove('bottom-border'); // Remove the class here
+    $savedWordsView.setAttribute('hidden', 'true'); // Hide saved words view
+  } else if (nameOfView === 'saved-words') {
+    $entryForm.setAttribute('hidden', 'true');
+    $save.setAttribute('hidden', 'true');
+    $selectOptionsPromt.setAttribute('hidden', 'true');
+    $navLinks.setAttribute('hidden', 'true');
+    $headerBottomBorder.classList.add('bottom-border'); // Add the class here
+    $savedWordsView.removeAttribute('hidden'); // Show saved words view
+  }
+
+  // Updating the data.view property to track the currently shown view
+  data.view = nameOfView;
+}
+
 // *************************************************************************************************//
 
 // ********************************** handleHomeButtonClick(event) ********************************//
@@ -206,6 +271,7 @@ function handleNavIconClicked(event) {
 function handleHomeButtonClick(event) {
   $backgroundColor.classList.remove('nav-background');
   $backgroundColor.classList.add('background-body-color');
+  viewSwap('entry-form');
 }
 
 // *************************************************************************************************//
@@ -217,10 +283,14 @@ function handleHomeButtonClick(event) {
 function handleLogoClick(event) {
   $backgroundColor.classList.remove('nav-background');
   $backgroundColor.classList.add('background-body-color');
+  viewSwap('entry-form');
 }
 
-// Defining an array to store selected button texts
-const selectedButtons = [];
+// Adding a 'click' event listener to the home button
+$homeLink.addEventListener('click', handleHomeButtonClick);
+
+// Adding a 'click' event listener to the keywords list button
+$logo.addEventListener('click', handleLogoClick);
 
 // *************************************************************************************************//
 
@@ -297,22 +367,37 @@ function renderOptions(options) {
 // RETURNS: None
 
 // AKA: Function to render saved words list by creating a DOM tree
-function renderKeywordList(savedWords) {
+function renderKeywordList() {
   const $savedWordsList = document.querySelector('#saved-words-list');
-
   // Clear any existing saved words
   $savedWordsList.textContent = '';
 
-  // Loop through savedWords array in reverse order and create list items
-  for (let i = savedWords.length - 1; i >= 0; i--) {
-    const savedWord = savedWords[i];
-    const extractedWord = extractWord(savedWord); // Call extractWord here
-    const li = document.createElement('li');
-    li.classList.add('saved-word'); // Apply the same class as selectable buttons
-    li.textContent = extractedWord; // Use the extracted word
-    $savedWordsList.appendChild(li);
-  }
+  data.entries.forEach(entry => {
+    if (entry.selectedButtons.length > 0) {
+      const wordDefParagraph = document.createElement('p');
+      wordDefParagraph.textContent = entry.newdate;
+      wordDefParagraph.classList.add('date-styling');
+      $savedWordsList.appendChild(wordDefParagraph);
+
+      entry.selectedButtons.forEach(savedWord => {
+        const extractedWord = extractWord(savedWord);
+        const li = document.createElement('li');
+        li.classList.add('saved-word');
+        li.textContent = extractedWord;
+        $savedWordsList.appendChild(li);
+      });
+    }
+  });
 }
+
+function handleKeywordsListButtonClicked() {
+  // Call viewSwap to switch to the saved-words view
+  viewSwap('saved-words');
+}
+
+// Adding a 'click' event listener to the KEYWORD LIST button
+const $keywordsButton = document.querySelector('.keywords-button');
+$keywordsButton.addEventListener('click', handleKeywordsListButtonClicked);
 
 // *************************************************************************************************//
 
@@ -335,51 +420,67 @@ function extractWord(savedWord) {
 
 // *************************************************************************************************//
 
-// *********************************** loadSavedWords(savedWords) ********************************//
-// PURPOSE: Function to load saved words from localStorage and render them
-// PARAMETER: None
-// RETURNS: None
-function loadSavedWords() {
-  const savedWordsJSON = localStorage.getItem('savedWords');
-  if (savedWordsJSON) {
-    const savedWords = JSON.parse(savedWordsJSON);
-    selectedButtons.push(...savedWords);
-
-    // Processing saved words to extract the words
-    const extractedWords = savedWords.map(extractWord);
-
-    renderKeywordList(extractedWords);
-  }
-}
-// *************************************************************************************************//
-
-// Calling loadSavedWords when the document has finished loading
-document.addEventListener('DOMContentLoaded', loadSavedWords);
-
 // Adding  a click event listener to the 'SAVE WORDS' button
-$saveWord.addEventListener('click', function () {
-  renderKeywordList(selectedButtons);
+$saveButton.addEventListener('click', function () {
+  if (newEntry.selectedButtons.length > 0) {
+    renderKeywordList(newEntry);
 
-  // Clearing the input and reset the form
-  $defInput.value = '';
-  $form.reset();
+    // Clearing the input and reset the form
+    $defInput.value = '';
+    $form.reset();
 
-  // Saving the selectedButtons array to localStorage
-  localStorage.setItem('savedWords', JSON.stringify(selectedButtons));
+    // Clearing the existing options
+    $entriesList.textContent = '';
 
-  // once we grab the words they want to keep save them
-  toggleSubmitButton(false);
-  toggleOptions(false);
+    // Reset the selectedButtons array
+    selectedButtons.length = 0;
+
+    toggleOptions(false);
+    toggleSaveButton(false);
+  } else {
+    console.error('No newEntry data available.');
+  }
 });
 
+function handleSaveButtonClick() {
+  if (selectedButtons.length > 0) {
+    newEntry.selectedButtons = selectedButtons.slice();
+
+    // Render the saved words list
+    renderKeywordList();
+
+    // Clearing the input and reset the form
+    $defInput.value = '';
+    $form.reset();
+
+    // Clearing the selectedButtons array
+    selectedButtons.length = 0;
+
+    // Calling the renderOptions function to update the options list
+    renderOptions([]);
+
+    // Showing the options list again after clearing it
+    toggleOptions(false);
+
+    // Toggling the save button
+    toggleSaveButton(false);
+
+    // Hiding the saved words view and show the entry form
+    viewSwap('saved-words');
+  } else {
+    console.error('No newEntry data available.');
+  }
+}
+
+// Adding a 'click' event listener to the 'SAVE WORDS' button
+$saveButton.addEventListener('click', handleSaveButtonClick);
+
 // Adding a 'click' event listener to the submit button
-$submitButton.addEventListener('click', handleSubmit);
+$searchButton.addEventListener('click', handleSubmit);
 
 // Adding a 'click' event listener to the submit button
 $navButton.addEventListener('click', handleNavIconClicked);
 
-// Adding a 'click' event listener to the home button
-$homeLink.addEventListener('click', handleHomeButtonClick);
-
-// Adding a 'click' event listener to the keywords list button
-$logo.addEventListener('click', handleLogoClick);
+document.addEventListener('DOMContentLoaded', function () {
+  renderKeywordList();
+});

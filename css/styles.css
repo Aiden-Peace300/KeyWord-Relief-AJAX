@@ -122,7 +122,8 @@ textarea {
   align-self: flex-end;
 }
 
-.submit-button {
+.search-button,
+.save-button {
   font-family: Exo, sans-serif;
   background: #6686a4;
   color: white;
@@ -168,14 +169,23 @@ textarea {
 .saved-word {
   background-color: #a3cef1;
   border: none;
-  margin-bottom: 0.5rem;
-  border-radius: 0.4rem;
+  margin-bottom: 1rem;
+  border-radius: 0.7rem;
   font-size: 1.5rem;
   text-align: left;
-  width: 100%;
+  width: 95%;
+  padding: 0.3rem;
+  margin-right: 3rem;
 }
 
 #words-saved-promt {
-  font-size: 2rem;
+  font-size: 2.5rem;
   margin: 0;
+  font-weight: bold;
+}
+
+.date-styling {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: Exo, sans-serif;
 }
