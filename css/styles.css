@@ -3,8 +3,20 @@ header {
   font-family: Exo, sans-serif;
 }
 
-#gray-background {
+.gray-background {
   background-color: #d1d0d0;
+}
+
+.background-body-color {
+  background-color: #efecec;
+}
+
+.nav-background {
+  background-color: #dcd6d6;
+}
+
+.bottom-border {
+  border-bottom: 2px solid black;
 }
 
 .header-text {
@@ -52,6 +64,7 @@ header {
 /* START OF MAIN STYLES */
 #type-def-promt,
 #click-words-to-save-promt,
+#words-saved-promt,
 li,
 button {
   font-family: Exo, sans-serif;
@@ -109,7 +122,8 @@ textarea {
   align-self: flex-end;
 }
 
-.submit-button {
+.search-button,
+.save-button {
   font-family: Exo, sans-serif;
   background: #6686a4;
   color: white;
@@ -125,4 +139,53 @@ textarea {
   align-self: flex-end;
   justify-content: center;
   padding: 0.5rem;
+}
+
+/* NAV BAR STYLING BELOW */
+.home-button,
+.keywords-button {
+  font-family: "JetBrains Mono", sans-serif;
+  background: #dcd6d6;
+  text-decoration: none;
+  font-size: 2rem;
+  margin-left: 0.5rem;
+}
+
+.space {
+  margin-top: 2rem;
+}
+
+.home-button:focus,
+.keywords-button:focus {
+  background-color: #a3cef1;
+}
+
+.home-button:visited,
+.keywords-button:visited {
+  color: black;
+}
+
+/* FOR DOM TREE */
+.saved-word {
+  background-color: #a3cef1;
+  border: none;
+  margin-bottom: 1rem;
+  border-radius: 0.7rem;
+  font-size: 1.5rem;
+  text-align: left;
+  width: 95%;
+  padding: 0.3rem;
+  margin-right: 3rem;
+}
+
+#words-saved-promt {
+  font-size: 2.5rem;
+  margin: 0;
+  font-weight: bold;
+}
+
+.date-styling {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: Exo, sans-serif;
 }

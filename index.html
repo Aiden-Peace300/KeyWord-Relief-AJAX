@@ -12,10 +12,11 @@
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Exo&display=swap" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet" type="text/css" />
 </head>
 
-<body>
-  <header id="gray-background">
+<body class="background-body-color">
+  <header id="border" class="gray-background">
     <div class="row">
       <div class="column-full space-between">
         <div class="logo">
@@ -30,14 +31,14 @@
     <form id="input-form" data-view="entry-form">
       <div class="row">
         <div class="column-full">
-          <p id="type-def-promt"> TYPE YOUR DEFINITION HERE: </p>
+          <p id="type-def-promt"> TYPE YOUR SYNONYM / DEFINITION HERE: </p>
           <textarea id="def" name="definition" rows="5" cols="94" required></textarea>
         </div>
       </div>
       <div class="row">
         <div class="column-full center-save bottom-search">
-          <div class="save-button">
-            <input class="submit-button" type="submit" value="SEARCH" />
+          <div class="search-button">
+            <input class="search-button" type="submit" value="SEARCH" />
           </div>
         </div>
       </div>
@@ -51,11 +52,29 @@
       <ul id="options-list"></ul>
       <div class="row">
         <div class="column-full center-save bottom-search">
-          <div class="save-button">
-            <input class="submit-button" id="toggle" type="submit" value="SAVE WORDS" />
+          <div class="save-button save">
+            <input class="save-button" id="toggle" type="submit" value="SAVE WORDS"/>
           </div>
         </div>
       </div>
+    </div>
+    <div class="nav-style" data-view="nav-links" hidden>
+      <div class="row">
+        <div class="column-full">
+          <a class="home-button" href="#entry-form" id="home-button">HOME</a>
+        </div>
+        <div class="column-full space">
+          <a class="keywords-button" href="#saved-words">KEYWORD LIST</a>
+        </div>
+      </div>
+    </div>
+    <div data-view="saved-words" hidden>
+      <div class="row">
+        <div class="column-full">
+          <p id="words-saved-promt">KEYWORDS LIST</p>
+        </div>
+      </div>
+      <ul id="saved-words-list"></ul>
     </div>
   </main>
   <script src="js/data.js"></script>

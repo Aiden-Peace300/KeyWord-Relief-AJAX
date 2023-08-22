@@ -1,18 +1,35 @@
 // Get references to HTML elements
-const $form = document.getElementById('input-form');
-const $submitButton = document.querySelector('.submit-button');
+const $form = document.querySelector('#input-form');
+const $logo = document.querySelector('.logo');
+const $searchButton = document.querySelector('.search-button');
+const $save = document.querySelector('.save');
+const $saveButton = document.querySelector('.save-button');
 const $defInput = document.querySelector('#def');
 const $entriesList = document.querySelector('#options-list');
-const $saveWord = document.querySelector('#toggle');
+const $navButton = document.querySelector('#nav-button');
+const $entryForm = document.querySelector('[data-view="entry-form"]');
+const $navLinks = document.querySelector('[data-view="nav-links"]');
+const $homeLink = document.querySelector('#home-button');
+const $backgroundColor = document.querySelector('.background-body-color');
+const $headerBottomBorder = document.querySelector('#border');
+const $savedWordsView = document.querySelector('[data-view="saved-words"]');
+const $selectOptionsPromt = document.querySelector('#click-words-to-save-promt');
 
-toggleSubmitButton(false);
+toggleSaveButton(false);
 
-// Function to make a request to the OpenAI API using XMLHttpRequest
+// *************************************************************************************************//
+
+// ***************************** getMsgData(name) (EVENT LISTENER FUNCTION) ************************//
+// PURPOSE: Function to make a request to the OpenAI API using XMLHttpRequest
+// PARAMETER: 'name' - The user input for the conversation
+// RETURNS: A promise that resolves with processed API response
+
+// AKA: Function to make a request to the OpenAI API using XMLHttpRequest
 function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configure the request
@@ -57,7 +74,16 @@ function getMsgData(name) {
   });
 }
 
-// Function to handle form submission
+// Defining an array to store selected button texts
+const selectedButtons = [];
+
+let newEntry = {};
+// *************************************************************************************************//
+
+// ******************************************* getMsgData(name) ************************************//
+// PURPOSE: Function to handle form submission
+// PARAMETER: 'event' - The submit event object
+// RETURNS: None
 async function handleSubmit(event) {
   event.preventDefault();
 
@@ -69,32 +95,80 @@ async function handleSubmit(event) {
   }
 
   try {
-    const prompt = "'(MOST IMPORTANT THING IS NO EXTRA PROMT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!) GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION:";
-    // Call the API function and handle the response
+    const prompt = "'(MOST IMPORTANT THING IS NO EXTRA PROMPT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!) GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION:";
+    // Calling the API function and handle the response
     const arrayOfOptions = await getMsgData(prompt + definition);
 
-    // Call the renderOptions function to render the options
+    $entriesList.textContent = '';
+
+    // Calling the renderOptions function to render the options
     renderOptions(arrayOfOptions);
 
-    toggleSubmitButton(true);
+    toggleSaveButton(true);
 
-    // Create a new entry object
-    const newEntry = {
+    // Create a new entry object with its own copy of selected buttons
+    const entrySelectedButtons = selectedButtons.slice(); // Copy the array
+
+    newEntry = {
       entryId: data.nextEntryId,
       definition,
       response: arrayOfOptions,
-      selectedButtons
+      selectedButtons: entrySelectedButtons,
+      newdate: getCurrentDate()
     };
 
-    // Increment the entry ID and update the entries array
     data.nextEntryId++;
+
+    // Save the newEntry to the data object
     data.entries.unshift(newEntry);
 
+    // Clear the selectedButtons array
+    selectedButtons.length = 0;
+
+    // Save the updated data to local storage
+    const dataJSON = JSON.stringify(data);
+    localStorage.setItem('Javascript-local-storage', dataJSON);
+
+    // Call the renderOptions function with the response array
+    renderOptions(newEntry.response);
+
+    toggleOptions(true);
+
+    // Call the renderKeywordList function with the selected keywords
+    renderKeywordList(newEntry);
+
   } catch (error) {
-    console.error(error);
     alert('An error occurred while processing your request.');
   }
 }
+
+function getCurrentDate() {
+  var monthArray = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const dateObj = new Date();
+  const month = monthArray[dateObj.getUTCMonth()];
+  const day = dateObj.getUTCDate();
+  const year = dateObj.getUTCFullYear();
+
+  // time is in military time
+  const time = ((dateObj.getHours().toString()).length > 1 ? dateObj.getHours() : '0' + dateObj.getHours()) + ':' + ((dateObj.getMinutes().toString()).length > 1 ? dateObj.getMinutes() : '0' + dateObj.getMinutes());
+
+  const newdate = month + ' ' + day + ' ' + year + '   ' + time;
+
+  return newdate;
+}
+
+// *************************************************************************************************//
+
+// ******************************* MsgGetCutIntoFivePieces (entry) **********************************//
+// PURPOSE: Function to split an entry into individual definitions
+// PARAMETER: 'entry' - The input entry containing multiple definitions
+// RETURNS: An array of individual definitions
+
+// AKA: Function to handle form submission
 
 function MsgGetCutIntoFivePieces(entry) {
   const definitions = entry.split('\n'); // Split the entry by newline characters
@@ -111,17 +185,28 @@ function MsgGetCutIntoFivePieces(entry) {
 
   return arrayOfOptions;
 }
+// *************************************************************************************************//
 
-// the visible parameter will be a boolean true if you
-// want the user to see the "SAVE WORDS" button
-function toggleSubmitButton(visible) {
+// *********************************** toggleSubmitButton (visible) ********************************//
+// PURPOSE: Function to toggle the visibility of the submit button
+// PARAMETER: 'visible' - Boolean indicating whether the button should be visible
+// RETURNS: None
+
+// AKA: Function visible ensure the 'save' button is shown when needed
+function toggleSaveButton(visible) {
   if (visible) {
-    $saveWord.removeAttribute('hidden');
+    $save.removeAttribute('hidden'); // show save button
   } else {
-    $saveWord.setAttribute('hidden', 'true');
+    $save.setAttribute('hidden', 'true'); // hide save button
   }
 }
 
+// *************************************************************************************************//
+
+// ************************************** toggleOptions(visible) ***********************************//
+// PURPOSE: Function to toggle the visibility of the options list
+// PARAMETER: 'visible' - Boolean indicating whether the list should be visible
+// RETURNS: None
 function toggleOptions(visible) {
   if (visible) {
     $entriesList.removeAttribute('hidden');
@@ -130,9 +215,93 @@ function toggleOptions(visible) {
   }
 }
 
-// Defining an array to store selected button texts
-const selectedButtons = [];
+// *************************************************************************************************//
 
+// ************************************ handleNavIconClicked(event) ********************************//
+// PURPOSE: Defining a function called 'handleNavIconClicked' which will ensure that the user only see
+// nav and nothing else!
+// PARAMETER: 'event' - The click event object
+// RETURNS: None
+
+// AKA: Function to handle the navigation icon click event
+function handleNavIconClicked(event) {
+  if (event.target.tagName === 'I') {
+    $backgroundColor.classList.remove('background-body-color');
+    $backgroundColor.classList.add('nav-background');
+    $save.setAttribute('hidden', 'true');
+    $headerBottomBorder.classList.add('bottom-border');
+    $entryForm.setAttribute('hidden', 'true');
+    $selectOptionsPromt.setAttribute('hidden', 'true');
+    $navLinks.removeAttribute('hidden');
+    $savedWordsView.setAttribute('hidden', 'true');
+    toggleOptions(false);
+  } else {
+    $entryForm.removeAttribute('hidden');
+    $navLinks.setAttribute('hidden', 'true');
+  }
+}
+
+function viewSwap(nameOfView) {
+  if (nameOfView === 'entry-form') {
+    $entryForm.removeAttribute('hidden');
+    $selectOptionsPromt.removeAttribute('hidden');
+    $navLinks.setAttribute('hidden', 'true');
+    $save.setAttribute('hidden', 'true');
+    $headerBottomBorder.classList.remove('bottom-border'); // Remove the class here
+    $savedWordsView.setAttribute('hidden', 'true'); // Hide saved words view
+  } else if (nameOfView === 'saved-words') {
+    $entryForm.setAttribute('hidden', 'true');
+    $save.setAttribute('hidden', 'true');
+    $selectOptionsPromt.setAttribute('hidden', 'true');
+    $navLinks.setAttribute('hidden', 'true');
+    $headerBottomBorder.classList.add('bottom-border'); // Add the class here
+    $savedWordsView.removeAttribute('hidden'); // Show saved words view
+  }
+
+  // Updating the data.view property to track the currently shown view
+  data.view = nameOfView;
+}
+
+// *************************************************************************************************//
+
+// ********************************** handleHomeButtonClick(event) ********************************//
+// PURPOSE: Function to handle the home button click event
+// PARAMETER: 'event' - The click event object
+// RETURNS: None
+function handleHomeButtonClick(event) {
+  $backgroundColor.classList.remove('nav-background');
+  $backgroundColor.classList.add('background-body-color');
+  viewSwap('entry-form');
+}
+
+// *************************************************************************************************//
+
+// ************************************* handleLogoClick(event) ************************************//
+// PURPOSE: Function to handle the logo click event
+// PARAMETER: 'event' - The click event object
+// RETURNS: None
+function handleLogoClick(event) {
+  $backgroundColor.classList.remove('nav-background');
+  $backgroundColor.classList.add('background-body-color');
+  viewSwap('entry-form');
+}
+
+// Adding a 'click' event listener to the home button
+$homeLink.addEventListener('click', handleHomeButtonClick);
+
+// Adding a 'click' event listener to the keywords list button
+$logo.addEventListener('click', handleLogoClick);
+
+// *************************************************************************************************//
+
+// ************************************** renderOptions(options) ***********************************//
+// PURPOSE: Defining a function called 'renderOptions' which will generate a DOM tree for each entry
+// in the array, and append that DOM tree to the unordered list. connected to a li(s) to
+// div[data-view="list-words-options"]
+// PARAMETER: 'options' - Array of options to render
+// RETURNS: None
+
+// AKA: Function to render selectable options as buttons though creating a DOM tree
 function renderOptions(options) {
 
   // Clear any existing options
@@ -178,7 +347,7 @@ function renderOptions(options) {
         // ...then remove that element from the selected list
         selectedButtons.splice(index, 1);
       } else {
-        // If not selected, add to the array
+        // else add to the array
         selectedButtons.push(buttonText);
 
         button.classList.add('focus');
@@ -187,17 +356,131 @@ function renderOptions(options) {
   });
 }
 
+// *************************************************************************************************//
+
+// *********************************** renderKeywordList(savedWords) ********************************//
+// PURPOSE: Defining a function named 'renderKeywordList' with a single parameter. The parameter will
+// need to be selectedButtons array when called. The function should generate and return a DOM tree
+// from the savedWords array each element in that array needs to match the entries you created in
+// the unordered list.
+// PARAMETER: 'savedWords' - Array of saved words
+// RETURNS: None
+
+// AKA: Function to render saved words list by creating a DOM tree
+function renderKeywordList() {
+  const $savedWordsList = document.querySelector('#saved-words-list');
+  // Clear any existing saved words
+  $savedWordsList.textContent = '';
+
+  data.entries.forEach(entry => {
+    if (entry.selectedButtons.length > 0) {
+      const wordDefParagraph = document.createElement('p');
+      wordDefParagraph.textContent = entry.newdate;
+      wordDefParagraph.classList.add('date-styling');
+      $savedWordsList.appendChild(wordDefParagraph);
+
+      entry.selectedButtons.forEach(savedWord => {
+        const extractedWord = extractWord(savedWord);
+        const li = document.createElement('li');
+        li.classList.add('saved-word');
+        li.textContent = extractedWord;
+        $savedWordsList.appendChild(li);
+      });
+    }
+  });
+}
+
+function handleKeywordsListButtonClicked() {
+  // Call viewSwap to switch to the saved-words view
+  viewSwap('saved-words');
+}
+
+// Adding a 'click' event listener to the KEYWORD LIST button
+const $keywordsButton = document.querySelector('.keywords-button');
+$keywordsButton.addEventListener('click', handleKeywordsListButtonClicked);
+
+// *************************************************************************************************//
+
+// *********************************** renderKeywordList(savedWords) ********************************//
+// PURPOSE: Defining a function called 'extractWord' with a single parameter. which will need to ensure
+// that the listed words don't have numbers attached to them
+// PARAMETER: savedWord (array)
+// RETURNS: returning that
+
+// AKA: Function to extract the word from the saved word format (number. word)
+function extractWord(savedWord) {
+  // Split the saved word by the period
+  const parts = savedWord.split('. ');
+  if (parts.length === 2) {
+    return parts[1]; // Return the second part (the word)
+  } else {
+    return savedWord; // Return the original saved word if format is unexpected
+  }
+}
+
+// *************************************************************************************************//
+
 // Adding  a click event listener to the 'SAVE WORDS' button
-$saveWord.addEventListener('click', function () {
+$saveButton.addEventListener('click', function () {
+  if (newEntry.selectedButtons.length > 0) {
+    renderKeywordList(newEntry);
 
-  // Clear the input and reset the form
-  $defInput.value = '';
-  $form.reset();
+    // Clearing the input and reset the form
+    $defInput.value = '';
+    $form.reset();
 
-  // once we grab the words they want to keep save them
-  toggleSubmitButton(false);
-  toggleOptions(false);
+    // Clearing the existing options
+    $entriesList.textContent = '';
+
+    // Reset the selectedButtons array
+    selectedButtons.length = 0;
+
+    toggleOptions(false);
+    toggleSaveButton(false);
+  } else {
+    console.error('No newEntry data available.');
+  }
 });
 
+function handleSaveButtonClick() {
+  if (selectedButtons.length > 0) {
+    newEntry.selectedButtons = selectedButtons.slice();
+
+    // Render the saved words list
+    renderKeywordList();
+
+    // Clearing the input and reset the form
+    $defInput.value = '';
+    $form.reset();
+
+    // Clearing the selectedButtons array
+    selectedButtons.length = 0;
+
+    // Calling the renderOptions function to update the options list
+    renderOptions([]);
+
+    // Showing the options list again after clearing it
+    toggleOptions(false);
+
+    // Toggling the save button
+    toggleSaveButton(false);
+
+    // Hiding the saved words view and show the entry form
+    viewSwap('saved-words');
+  } else {
+    console.error('No newEntry data available.');
+  }
+}
+
+// Adding a 'click' event listener to the 'SAVE WORDS' button
+$saveButton.addEventListener('click', handleSaveButtonClick);
+
 // Adding a 'click' event listener to the submit button
-$submitButton.addEventListener('click', handleSubmit);
+$searchButton.addEventListener('click', handleSubmit);
+
+// Adding a 'click' event listener to the submit button
+$navButton.addEventListener('click', handleNavIconClicked);
+
+document.addEventListener('DOMContentLoaded', function () {
+  renderKeywordList();
+});
