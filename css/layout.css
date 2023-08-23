@@ -16,9 +16,25 @@
   width: 100%;
 }
 
+.column-word-and-def {
+  width: 96%;
+}
+
+.column-delete {
+  width: 4%;
+}
+
 @media screen and (min-width: 768px) {
   .container {
     max-width: 100%;
+  }
+
+  .column-word-and-def {
+    width: 99%;
+  }
+
+  .column-delete {
+    width: 1%;
   }
 
   .column-full,

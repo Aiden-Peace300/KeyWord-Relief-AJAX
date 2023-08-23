@@ -73,6 +73,7 @@ button {
 
 li {
   margin-right: 1rem;
+  display: flex;
 }
 
 button {
@@ -188,4 +189,22 @@ textarea {
   font-size: 1.5rem;
   font-weight: bold;
   font-family: Exo, sans-serif;
+}
+
+.delete {
+  color: #6686a4;
+  justify-content: center;
+  align-content: flex-start;
+  margin-top: 0.3rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.delete:hover {
+  color: #5b000e;
+}
+
+.word-and-def {
+  margin: 0;
 }

@@ -29,7 +29,7 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Create an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configure the request
@@ -382,8 +382,14 @@ function renderKeywordList() {
       entry.selectedButtons.forEach(savedWord => {
         const extractedWord = extractWord(savedWord);
         const li = document.createElement('li');
+        const wordAndDef = document.createElement('p');
+        const deletebutton = document.createElement('p');
+        deletebutton.classList.add('fa', 'fa-trash', 'delete', 'column-delete');
+        wordAndDef.classList.add('word-and-def', 'column-word-and-def');
         li.classList.add('saved-word');
-        li.textContent = extractedWord;
+        wordAndDef.textContent = extractedWord;
+        li.appendChild(wordAndDef);
+        li.appendChild(deletebutton);
         $savedWordsList.appendChild(li);
       });
     }
