@@ -379,8 +379,12 @@ function renderKeywordList() {
   data.entries.forEach(entry => {
     if (entry.selectedButtons.length > 0) {
       const wordDefParagraph = document.createElement('p');
+      const wordTypedIn = document.createElement('p');
+      wordTypedIn.textContent = 'YOU TYPED: ' + entry.definition;
+      wordTypedIn.classList.add('word-type-in');
       wordDefParagraph.textContent = entry.newdate;
       wordDefParagraph.classList.add('date-styling');
+      wordDefParagraph.appendChild(wordTypedIn);
       $savedWordsList.appendChild(wordDefParagraph);
 
       entry.selectedButtons.forEach(savedWord => {
@@ -501,11 +505,25 @@ function hideDeleteModal() {
 // }
 
 function handleConfirmDelete(event) {
-  event.preventDefault();
-  // Implement the logic to confirm and execute the delete action
-  // For example, you might remove the entry from the `data.entries` array
-  // and then update the saved words list using the `renderKeywordList` function
-  hideDeleteModal(); // Make sure to hide the delete modal after deletion
+  // Find the index of the entry to delete
+  const entryIndexToDelete = data.entries.findIndex(entry => entry.entryId === newEntry.entryId);
+
+  if (entryIndexToDelete !== -1) {
+    // Remove the entry from the data model's entry array
+    data.entries.splice(entryIndexToDelete, 1);
+
+    // Update the saved words list after deletion
+    renderKeywordList();
+
+    // Find and remove the entry's li element from the DOM
+    const liToRemove = document.querySelector(`li[data-entry-id="${newEntry.entryId}"]`);
+    if (liToRemove) {
+      liToRemove.remove();
+    }
+  }
+
+  // Hide the modal after deletion
+  hideDeleteModal();
 }
 
 function handleCancelDelete(event) {
@@ -529,4 +547,13 @@ $cancelDeleteButton.addEventListener('click', handleCancelDelete);
 
 document.addEventListener('DOMContentLoaded', function () {
   renderKeywordList();
+
+  // Showing the view which was displayed prior to page refresh, or default to "entries" view
+  viewSwap(data.view);
+
+  // to ensure that the user doesn't see
+  // the save button when the pages reloads
+  if (data.view === 'entry-form') {
+    toggleSaveButton(false);
+  }
 });
