@@ -15,6 +15,10 @@ const $headerBottomBorder = document.querySelector('#border');
 const $savedWordsView = document.querySelector('[data-view="saved-words"]');
 const $selectOptionsPromt = document.querySelector('#click-words-to-save-promt');
 
+const $deleteModal = document.querySelector('#delete-modal');
+const $cancelDeleteButton = document.querySelector('#cancel-delete-button');
+const $confirmDeleteButton = document.querySelector('#confirm-delete-button');
+
 toggleSaveButton(false);
 
 // *************************************************************************************************//
@@ -383,14 +387,20 @@ function renderKeywordList() {
         const extractedWord = extractWord(savedWord);
         const li = document.createElement('li');
         const wordAndDef = document.createElement('p');
-        const deletebutton = document.createElement('p');
-        deletebutton.classList.add('fa', 'fa-trash', 'delete', 'column-delete');
+        const deleteButton = document.createElement('i');
+        deleteButton.classList.add('fa', 'fa-trash', 'delete', 'column-delete');
         wordAndDef.classList.add('word-and-def', 'column-word-and-def');
         li.classList.add('saved-word');
         wordAndDef.textContent = extractedWord;
         li.appendChild(wordAndDef);
-        li.appendChild(deletebutton);
+        li.appendChild(deleteButton);
         $savedWordsList.appendChild(li);
+
+        // Add click event listener to the delete button
+        deleteButton.addEventListener('click', () => {
+          // Show the delete modal when the delete button is clicked
+          $deleteModal.classList.add('block');
+        });
       });
     }
   });
@@ -478,6 +488,30 @@ function handleSaveButtonClick() {
   }
 }
 
+function hideDeleteModal() {
+  $deleteModal.classList.remove('block');
+}
+
+// function handleDeleteEntry(event) {
+//   event.preventDefault();
+//   // Implement the logic to delete the entry here
+//   // For example, you might remove the entry from the `data.entries` array
+//   // and then update the saved words list using the `renderKeywordList` function
+//   hideDeleteModal(); // Make sure to hide the delete modal after deletion
+// }
+
+function handleConfirmDelete(event) {
+  event.preventDefault();
+  // Implement the logic to confirm and execute the delete action
+  // For example, you might remove the entry from the `data.entries` array
+  // and then update the saved words list using the `renderKeywordList` function
+  hideDeleteModal(); // Make sure to hide the delete modal after deletion
+}
+
+function handleCancelDelete(event) {
+  event.preventDefault(); // Prevent the default behavior of the link
+  hideDeleteModal();
+}
 // Adding a 'click' event listener to the 'SAVE WORDS' button
 $saveButton.addEventListener('click', handleSaveButtonClick);
 
@@ -486,6 +520,12 @@ $searchButton.addEventListener('click', handleSubmit);
 
 // Adding a 'click' event listener to the submit button
 $navButton.addEventListener('click', handleNavIconClicked);
+
+// Adding a 'click' event listener to the confirm delete button
+$confirmDeleteButton.addEventListener('click', handleConfirmDelete);
+
+// Adding a 'click' event listener to the confirm delete button
+$cancelDeleteButton.addEventListener('click', handleCancelDelete);
 
 document.addEventListener('DOMContentLoaded', function () {
   renderKeywordList();
