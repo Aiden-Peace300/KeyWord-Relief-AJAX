@@ -35,7 +35,7 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Creating an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configuring the request
@@ -399,14 +399,14 @@ function renderKeywordList() {
 
   data.entries.forEach((entry, entryIndex) => {
     if (entry.selectedButtons.length > 0) {
-      const wordDefParagraph = document.createElement('p');
+      const date = document.createElement('p');
       const wordTypedIn = document.createElement('p');
+      wordTypedIn.classList.add('word-typed-in');
       wordTypedIn.textContent = 'YOU TYPED: ' + entry.definition;
-      wordTypedIn.classList.add('word-type-in');
-      wordDefParagraph.textContent = entry.newdate;
-      wordDefParagraph.classList.add('date-styling');
-      wordDefParagraph.appendChild(wordTypedIn);
-      $savedWordsList.appendChild(wordDefParagraph);
+      date.textContent = entry.newdate;
+      date.classList.add('date-info');
+      $savedWordsList.appendChild(date);
+      $savedWordsList.appendChild(wordTypedIn);
 
       entry.selectedButtons.forEach((savedWord, selectedButtonIndex) => {
         const extractedWord = extractWord(savedWord);

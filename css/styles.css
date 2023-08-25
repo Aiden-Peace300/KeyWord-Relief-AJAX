@@ -186,8 +186,13 @@ textarea {
   font-weight: bold;
 }
 
-.date-styling {
-  font-size: 1.5rem;
+.word-typed-in {
+  font-size: 1rem;
+  font-family: Exo, sans-serif;
+}
+
+.date-info {
+  font-size: 1rem;
   font-weight: bold;
   font-family: Exo, sans-serif;
 }
@@ -289,11 +294,6 @@ textarea {
 
 .modal.block {
   display: block;
-}
-
-.word-type-in {
-  text-transform: uppercase;
-  font-size: 1rem;
 }
 
 /* FOR LOADING SCREEN */
