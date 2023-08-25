@@ -14,12 +14,14 @@ const $backgroundColor = document.querySelector('.background-body-color');
 const $headerBottomBorder = document.querySelector('#border');
 const $savedWordsView = document.querySelector('[data-view="saved-words"]');
 const $selectOptionsPromt = document.querySelector('#click-words-to-save-promt');
-
 const $deleteModal = document.querySelector('#delete-modal');
 const $cancelDeleteButton = document.querySelector('#cancel-delete-button');
 const $confirmDeleteButton = document.querySelector('#confirm-delete-button');
+const $noEntriesMessage = document.querySelector('.no-entries-message');
+const $loader = document.querySelector('.loader');
 
 toggleSaveButton(false);
+toggleLoader(false);
 
 // *************************************************************************************************//
 
@@ -31,19 +33,19 @@ toggleSaveButton(false);
 // AKA: Function to make a request to the OpenAI API using XMLHttpRequest
 function getMsgData(name) {
   return new Promise((resolve, reject) => {
-    // Create an XMLHttpRequest object
+    // Creating an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
-    // Configure the request
+    // Configuring the request
     xhr.open('POST', url);
     xhr.setRequestHeader('Authorization', `Bearer ${apiKey}`);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.responseType = 'json';
-
+    toggleLoader(true);
     xhr.addEventListener('load', function () {
-      // Handle response using Promise
+      // Handling response using Promise
       if (xhr.status === 200) {
         let chatGptMsg = '';
 
@@ -54,8 +56,10 @@ function getMsgData(name) {
         const definitions = MsgGetCutIntoFivePieces(chatGptMsg);
 
         resolve(definitions); // Resolve the promise with the result
+        toggleLoader(false);
       } else {
         reject(console.error('API request failed'));
+        toggleLoader(false);
       }
     });
 
@@ -81,7 +85,10 @@ function getMsgData(name) {
 // Defining an array to store selected button texts
 const selectedButtons = [];
 
-let newEntry = {};
+let newEntry = {
+  entryIdToDelete: -1,
+  selectedButtonIndexToDelete: -1
+};
 // *************************************************************************************************//
 
 // ******************************************* getMsgData(name) ************************************//
@@ -101,6 +108,7 @@ async function handleSubmit(event) {
   try {
     const prompt = "'(MOST IMPORTANT THING IS NO EXTRA PROMPT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!) GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION:";
     // Calling the API function and handle the response
+
     const arrayOfOptions = await getMsgData(prompt + definition);
 
     $entriesList.textContent = '';
@@ -108,9 +116,7 @@ async function handleSubmit(event) {
     // Calling the renderOptions function to render the options
     renderOptions(arrayOfOptions);
 
-    toggleSaveButton(true);
-
-    // Create a new entry object with its own copy of selected buttons
+    // Creating a new entry object with its own copy of selected buttons
     const entrySelectedButtons = selectedButtons.slice(); // Copy the array
 
     newEntry = {
@@ -123,26 +129,38 @@ async function handleSubmit(event) {
 
     data.nextEntryId++;
 
-    // Save the newEntry to the data object
+    // Saving the newEntry to the data object
     data.entries.unshift(newEntry);
 
-    // Clear the selectedButtons array
+    // Clearing the selectedButtons array
     selectedButtons.length = 0;
 
-    // Save the updated data to local storage
+    // Saving the updated data to local storage
     const dataJSON = JSON.stringify(data);
     localStorage.setItem('Javascript-local-storage', dataJSON);
 
-    // Call the renderOptions function with the response array
+    // Calling the renderOptions function with the response array
     renderOptions(newEntry.response);
 
     toggleOptions(true);
 
-    // Call the renderKeywordList function with the selected keywords
+    // Showing the save button
+    toggleSaveButton(true);
+
+    // Calling the renderKeywordList function with the selected keywords
     renderKeywordList(newEntry);
 
   } catch (error) {
+
     alert('An error occurred while processing your request.');
+  }
+}
+
+function toggleLoader(visible) {
+  if (visible && (selectedButtons.length === 0)) {
+    $loader.removeAttribute('hidden'); // Show loader only if no selections made or input is empty
+  } else {
+    $loader.setAttribute('hidden', 'true'); // Hide loader
   }
 }
 
@@ -308,10 +326,10 @@ $logo.addEventListener('click', handleLogoClick);
 // AKA: Function to render selectable options as buttons though creating a DOM tree
 function renderOptions(options) {
 
-  // Clear any existing options
+  // Clearing any existing options
   $entriesList.textContent = '';
 
-  // Loop through options and create buttons for each
+  // Looping through options and create buttons for each
   options.forEach((option, index) => {
     const li = document.createElement('li');
     const button = document.createElement('button');
@@ -372,11 +390,14 @@ function renderOptions(options) {
 
 // AKA: Function to render saved words list by creating a DOM tree
 function renderKeywordList() {
+  let keywordsCounter = 0;
+
   const $savedWordsList = document.querySelector('#saved-words-list');
-  // Clear any existing saved words
+
+  // Clearing any existing saved words
   $savedWordsList.textContent = '';
 
-  data.entries.forEach(entry => {
+  data.entries.forEach((entry, entryIndex) => {
     if (entry.selectedButtons.length > 0) {
       const wordDefParagraph = document.createElement('p');
       const wordTypedIn = document.createElement('p');
@@ -387,7 +408,7 @@ function renderKeywordList() {
       wordDefParagraph.appendChild(wordTypedIn);
       $savedWordsList.appendChild(wordDefParagraph);
 
-      entry.selectedButtons.forEach(savedWord => {
+      entry.selectedButtons.forEach((savedWord, selectedButtonIndex) => {
         const extractedWord = extractWord(savedWord);
         const li = document.createElement('li');
         const wordAndDef = document.createElement('p');
@@ -398,20 +419,36 @@ function renderKeywordList() {
         wordAndDef.textContent = extractedWord;
         li.appendChild(wordAndDef);
         li.appendChild(deleteButton);
-        $savedWordsList.appendChild(li);
 
-        // Add click event listener to the delete button
+        // Setting data attributes for entryIndex and selectedButtonIndex
+        deleteButton.setAttribute('data-entry-index', entryIndex);
+        deleteButton.setAttribute('data-button-index', selectedButtonIndex);
+
+        $savedWordsList.appendChild(li);
+        keywordsCounter++;
+
+        // Adding click event listener to the delete button
         deleteButton.addEventListener('click', () => {
-          // Show the delete modal when the delete button is clicked
+          // Showing the delete modal when the delete button is clicked
           $deleteModal.classList.add('block');
+
+          // Getting the entry index and selected button index from data attributes
+          const entryIndexToDelete = event.target.getAttribute('data-entry-index');
+          const selectedButtonIndexToDelete = event.target.getAttribute('data-button-index');
+
+          // Converting the strings to integers
+          newEntry.entryIdToDelete = parseInt(entryIndexToDelete);
+          newEntry.selectedButtonIndexToDelete = parseInt(selectedButtonIndexToDelete);
         });
       });
     }
   });
+  // Showing or hiding the "No entries" message as needed
+  toggleNoEntries(keywordsCounter === 0);
 }
 
 function handleKeywordsListButtonClicked() {
-  // Call viewSwap to switch to the saved-words view
+  // Calling viewSwap to switch to the saved-words view
   viewSwap('saved-words');
 }
 
@@ -429,12 +466,12 @@ $keywordsButton.addEventListener('click', handleKeywordsListButtonClicked);
 
 // AKA: Function to extract the word from the saved word format (number. word)
 function extractWord(savedWord) {
-  // Split the saved word by the period
+  // Spliting the saved word by the period
   const parts = savedWord.split('. ');
   if (parts.length === 2) {
-    return parts[1]; // Return the second part (the word)
+    return parts[1]; // Returning the second part (the word)
   } else {
-    return savedWord; // Return the original saved word if format is unexpected
+    return savedWord; // Returning the original saved word if format is unexpected
   }
 }
 
@@ -442,6 +479,7 @@ function extractWord(savedWord) {
 
 // Adding  a click event listener to the 'SAVE WORDS' button
 $saveButton.addEventListener('click', function () {
+
   if (newEntry.selectedButtons.length > 0) {
     renderKeywordList(newEntry);
 
@@ -452,13 +490,11 @@ $saveButton.addEventListener('click', function () {
     // Clearing the existing options
     $entriesList.textContent = '';
 
-    // Reset the selectedButtons array
+    // Resetting the selectedButtons array
     selectedButtons.length = 0;
 
     toggleOptions(false);
     toggleSaveButton(false);
-  } else {
-    console.error('No newEntry data available.');
   }
 });
 
@@ -466,7 +502,7 @@ function handleSaveButtonClick() {
   if (selectedButtons.length > 0) {
     newEntry.selectedButtons = selectedButtons.slice();
 
-    // Render the saved words list
+    // Rendering the saved words list
     renderKeywordList();
 
     // Clearing the input and reset the form
@@ -487,6 +523,7 @@ function handleSaveButtonClick() {
 
     // Hiding the saved words view and show the entry form
     viewSwap('saved-words');
+
   } else {
     console.error('No newEntry data available.');
   }
@@ -496,33 +533,30 @@ function hideDeleteModal() {
   $deleteModal.classList.remove('block');
 }
 
-// function handleDeleteEntry(event) {
-//   event.preventDefault();
-//   // Implement the logic to delete the entry here
-//   // For example, you might remove the entry from the `data.entries` array
-//   // and then update the saved words list using the `renderKeywordList` function
-//   hideDeleteModal(); // Make sure to hide the delete modal after deletion
-// }
+function handleConfirmDelete(entryIndex, selectedButtonIndex) {
+  if (
+    entryIndex !== -1 &&
+    selectedButtonIndex !== -1 &&
+    data.entries[entryIndex] &&
+    data.entries[entryIndex].selectedButtons[selectedButtonIndex]
+  ) {
+    // Removing the button from the selectedButtons array
+    data.entries[entryIndex].selectedButtons.splice(selectedButtonIndex, 1);
 
-function handleConfirmDelete(event) {
-  // Find the index of the entry to delete
-  const entryIndexToDelete = data.entries.findIndex(entry => entry.entryId === newEntry.entryId);
+    // If selectedButtons array becomes empty, remove the entry from data.entries
+    if (data.entries[entryIndex].selectedButtons.length === 0) {
+      data.entries.splice(entryIndex, 1);
+      data.nextEntryId--; // Decrement nextEntryId
+    }
 
-  if (entryIndexToDelete !== -1) {
-    // Remove the entry from the data model's entry array
-    data.entries.splice(entryIndexToDelete, 1);
-
-    // Update the saved words list after deletion
+    // updating DOM tree
     renderKeywordList();
 
-    // Find and remove the entry's li element from the DOM
-    const liToRemove = document.querySelector(`li[data-entry-id="${newEntry.entryId}"]`);
-    if (liToRemove) {
-      liToRemove.remove();
-    }
+  } else {
+    console.error('Selected button index or entry data not found.');
   }
 
-  // Hide the modal after deletion
+  // Hiding the modal after removal
   hideDeleteModal();
 }
 
@@ -530,6 +564,16 @@ function handleCancelDelete(event) {
   event.preventDefault(); // Prevent the default behavior of the link
   hideDeleteModal();
 }
+
+// toggleNoEntries() Function to toggle the visibility of the "No entries" message
+function toggleNoEntries(show) {
+  if (show) {
+    $noEntriesMessage.classList.remove('hidden');
+  } else {
+    $noEntriesMessage.classList.add('hidden');
+  }
+}
+
 // Adding a 'click' event listener to the 'SAVE WORDS' button
 $saveButton.addEventListener('click', handleSaveButtonClick);
 
@@ -540,7 +584,10 @@ $searchButton.addEventListener('click', handleSubmit);
 $navButton.addEventListener('click', handleNavIconClicked);
 
 // Adding a 'click' event listener to the confirm delete button
-$confirmDeleteButton.addEventListener('click', handleConfirmDelete);
+$confirmDeleteButton.addEventListener('click', function () {
+  // Passing entry index and selected button index to the function
+  handleConfirmDelete(newEntry.entryIdToDelete, newEntry.selectedButtonIndexToDelete);
+});
 
 // Adding a 'click' event listener to the confirm delete button
 $cancelDeleteButton.addEventListener('click', handleCancelDelete);
