@@ -20,6 +20,8 @@ const $confirmDeleteButton = document.querySelector('#confirm-delete-button');
 const $noEntriesMessage = document.querySelector('.no-entries-message');
 const $loader = document.querySelector('.loader');
 
+const $savedWordsList = document.querySelector('#saved-words-list');
+
 toggleSaveButton(false);
 toggleLoader(false);
 
@@ -35,7 +37,7 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Creating an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configuring the request
@@ -381,18 +383,14 @@ function renderOptions(options) {
 // *************************************************************************************************//
 
 // *********************************** renderKeywordList(savedWords) ********************************//
-// PURPOSE: Defining a function named 'renderKeywordList' with a single parameter. The parameter will
-// need to be selectedButtons array when called. The function should generate and return a DOM tree
-// from the savedWords array each element in that array needs to match the entries you created in
-// the unordered list.
-// PARAMETER: 'savedWords' - Array of saved words
+// PURPOSE: Defining a function named 'renderKeywordList' The function should generate and return a DOM
+// tree from the savedWords (global) array each element in that array needs to match figma
+// PARAMETER: None
 // RETURNS: None
 
 // AKA: Function to render saved words list by creating a DOM tree
 function renderKeywordList() {
   let keywordsCounter = 0;
-
-  const $savedWordsList = document.querySelector('#saved-words-list');
 
   // Clearing any existing saved words
   $savedWordsList.textContent = '';
@@ -405,8 +403,8 @@ function renderKeywordList() {
       wordTypedIn.textContent = 'YOU TYPED: ' + entry.definition;
       date.textContent = entry.newdate;
       date.classList.add('date-info');
-      $savedWordsList.appendChild(date);
       $savedWordsList.appendChild(wordTypedIn);
+      $savedWordsList.appendChild(date);
 
       entry.selectedButtons.forEach((savedWord, selectedButtonIndex) => {
         const extractedWord = extractWord(savedWord);
@@ -540,6 +538,7 @@ function handleConfirmDelete(entryIndex, selectedButtonIndex) {
     data.entries[entryIndex] &&
     data.entries[entryIndex].selectedButtons[selectedButtonIndex]
   ) {
+
     // Removing the button from the selectedButtons array
     data.entries[entryIndex].selectedButtons.splice(selectedButtonIndex, 1);
 

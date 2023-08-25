@@ -188,12 +188,12 @@ textarea {
 
 .word-typed-in {
   font-size: 1rem;
+  font-weight: bold;
   font-family: Exo, sans-serif;
 }
 
 .date-info {
   font-size: 1rem;
-  font-weight: bold;
   font-family: Exo, sans-serif;
 }
 
