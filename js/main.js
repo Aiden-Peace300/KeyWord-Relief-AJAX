@@ -602,5 +602,6 @@ document.addEventListener('DOMContentLoaded', function () {
   // the save button when the pages reloads
   if (data.view === 'entry-form') {
     toggleSaveButton(false);
+    toggleLoader(false);
   }
 });
