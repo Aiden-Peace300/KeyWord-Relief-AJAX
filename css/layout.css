@@ -16,9 +16,31 @@
   width: 100%;
 }
 
+.column-word-and-def {
+  width: 96%;
+}
+
+.column-delete {
+  width: 4%;
+}
+
+.no-entries-message {
+  margin-left: 0.5rem;
+  align-content: none;
+  font-family: Exo, sans-serif;
+}
+
 @media screen and (min-width: 768px) {
   .container {
     max-width: 100%;
+  }
+
+  .column-word-and-def {
+    width: 99%;
+  }
+
+  .column-delete {
+    width: 1%;
   }
 
   .column-full,
@@ -28,5 +50,10 @@
 
   .column-half {
     width: 50%;
+  }
+
+  .no-entries-message {
+    text-align: center;
+    font-family: Exo, sans-serif;
   }
 }

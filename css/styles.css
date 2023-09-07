@@ -73,6 +73,7 @@ button {
 
 li {
   margin-right: 1rem;
+  display: flex;
 }
 
 button {
@@ -86,10 +87,6 @@ button {
   width: 100%;
 }
 
-.focus {
-  background-color: #a3cef1;
-}
-
 ul {
   list-style: none;
   padding-left: 1rem;
@@ -98,6 +95,11 @@ ul {
 .options-list {
   padding-left: 0;
   border-radius: 5rem;
+}
+
+.selectable-button.focus {
+  background-color: #a3cef1;
+  color: black;
 }
 
 #def {
@@ -184,8 +186,214 @@ textarea {
   font-weight: bold;
 }
 
-.date-styling {
-  font-size: 1.5rem;
+.word-typed-in {
+  font-size: 1rem;
   font-weight: bold;
   font-family: Exo, sans-serif;
+}
+
+.date-info {
+  font-size: 1rem;
+  font-family: Exo, sans-serif;
+}
+
+.delete {
+  color: #6686a4;
+  justify-content: center;
+  align-content: flex-start;
+  margin-top: 0.3rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.delete:hover {
+  color: #5b000e;
+}
+
+.word-and-def {
+  margin: 0;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+
+  /* Hide the modal by default */
+
+  /* To insure the rest of the page is has Semi-transparent background while
+    surveryQuestionPopupWindow is up */
+  background-color: rgba(0, 0, 0, 0.5);
+
+  /* Semi-transparent background */
+  width: 100vw;
+
+  /* Take up the full viewport width */
+  height: 100vh;
+
+  /* Take up the full viewport height */
+
+  /* The 'dark-body-class' element will cover the entire browser viewport. */
+  position: fixed;
+
+  /* The 'modal' element will cover the entire browser viewport. */
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+/* p tag has default margin and padding */
+.modal-content p {
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3.5rem;
+}
+
+.confirm-button,
+.cancel-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
+.confirm-button {
+  background-color: red;
+  color: white;
+  font-size: 1.2rem;
+  border: none;
+  margin-right: 2rem;
+}
+
+.cancel-button {
+  background-color: lightgray;
+  color: black;
+  font-size: 1.2rem;
+  border: none;
+}
+
+.modal.block {
+  display: block;
+}
+
+/* FOR LOADING SCREEN */
+.screen {
+  background: efecec;
+  display: flex;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.loader {
+  width: 100%;
+  height: 1rem;
+  text-align: center;
+}
+
+.dot {
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  margin: 2rem;
+  display: inline-block;
+}
+
+.dot::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
+  animation-name: dot-hover;
+  animation-duration: 900ms;
+  animation-timing-function: cubic-bezier(0.82, 0, 0.26, 1);
+  animation-iteration-count: infinite;
+  animation-delay: 100ms;
+  background: #6686a4;
+  border-radius: 100%;
+}
+
+.dot:first-child::before {
+  animation-delay: 0ms;
+}
+
+.dot::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: black;
+  box-shadow: 0 0 1px black;
+  opacity: 0.2;
+  width: 100%;
+  height: 3px;
+  left: 0;
+  bottom: -2px;
+  border-radius: 50%;
+  animation-name: dot-shadow;
+  animation-duration: 900ms;
+  animation-timing-function: cubic-bezier(0.82, 0, 0.26, 1);
+  animation-iteration-count: infinite;
+  animation-delay: 100ms;
+}
+
+.dot:first-child::after {
+  animation-delay: 0ms;
+}
+
+.dot:last-child::before {
+  animation-delay: 200ms;
+}
+
+.dot:last-child::after {
+  animation-delay: 200ms;
+}
+
+@keyframes dot-shadow {
+  0% {
+    transform: scaleX(1);
+  }
+
+  50% {
+    opacity: 0;
+    transform: scaleX(0.6);
+  }
+
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes dot-hover {
+  0% {
+    top: 0;
+  }
+
+  50% {
+    top: -50px;
+    transform: scale(1.1);
+  }
+
+  100% {
+    top: 0;
+  }
 }
