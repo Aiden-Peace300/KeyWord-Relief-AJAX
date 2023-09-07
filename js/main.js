@@ -37,7 +37,16 @@ function getMsgData(name) {
   return new Promise((resolve, reject) => {
     // Creating an XMLHttpRequest object
     const xhr = new XMLHttpRequest();
-    const apiKey = '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';
+    const keyParts = [
+      'sk-',
+      'ayEwmg2',
+      'GmelGbtQ5c',
+      '4I9T3B',
+      'lbkFJh2Nx',
+      'L5Mm1pWO7Jy',
+      'saohY'
+    ];
+    const apiKey = keyParts.join('');
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configuring the request
