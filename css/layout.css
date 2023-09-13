@@ -35,6 +35,10 @@
     max-width: 100%;
   }
 
+  .selectable-button.focus {
+    color: black;
+  }
+
   .column-word-and-def {
     width: 99%;
   }
