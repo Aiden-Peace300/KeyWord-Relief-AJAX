@@ -39,15 +39,15 @@ function getMsgData(name) {
     const xhr = new XMLHttpRequest();
     const keyParts = [
       'sk-',
-      'ayEwmg2',
-      'GmelGbtQ5c',
-      '4I9T3B',
-      'lbkFJh2Nx',
-      'L5Mm1pWO7Jy',
-      'saohY'
+      'gHGNa3CvQ',
+      'zvbgze0',
+      'ujgIT3Blb',
+      'kFJMRI9h',
+      'YXSixuXm6',
+      'DDDGok'
     ];
     const apiKey = keyParts.join('');
-    // const apiKey = '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';
+
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configuring the request
