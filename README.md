@@ -2,6 +2,8 @@
 
 A dynamic HTML, CSS, and JavaScript solo project.
 
+This project is designed to show my competency of DOM manipulation
+
 DEMOGRAPHIC:
 A web application for writers who want to expand their vocabulary.
 
