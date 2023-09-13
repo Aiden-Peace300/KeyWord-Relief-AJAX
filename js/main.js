@@ -47,6 +47,7 @@ function getMsgData(name) {
       'saohY'
     ];
     const apiKey = keyParts.join('');
+    // const apiKey = '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';
     const url = 'https://api.openai.com/v1/chat/completions';
 
     // Configuring the request
