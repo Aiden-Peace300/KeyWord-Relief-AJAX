@@ -1,7 +1,7 @@
 # KEYWORD RELIEF - AJAX PROJECT
 
 ## Overview
-Welcome to the Vocabulary Enhancer web application, a dynamic project showcasing the power of HTML, CSS, and JavaScript. This project is a testament to my proficiency in DOM manipulation, developed as a solo endeavor. It serves as a valuable tool for writers looking to expand their vocabulary.
+Welcome to the Keyword relief web application, a dynamic project showcasing the power of HTML, CSS, and JavaScript. This project is a testament to my proficiency in DOM manipulation, developed as a solo endeavor. It serves as a valuable tool for writers looking to expand their vocabulary.
 
 ## Features
 ### 1. Create an Entry
