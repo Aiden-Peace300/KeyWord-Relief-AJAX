@@ -1,5 +1,7 @@
 # KEYWORD RELIEF - AJAX PROJECT
 
+<img width="1277" alt="keyword relief web application" src="https://github.com/Aiden-Peace300/KeyWord-Relief-AJAX/assets/47370726/78648b46-c6b0-4ab8-9c6c-550d73900f94">
+
 ## Overview
 Welcome to the Keyword relief web application, a dynamic project showcasing the power of HTML, CSS, and JavaScript. This project is a testament to my proficiency in DOM manipulation, developed as a solo endeavor. It serves as a valuable tool for writers looking to expand their vocabulary.
 
