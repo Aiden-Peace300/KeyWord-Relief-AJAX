@@ -39,12 +39,11 @@ function getMsgData(name) {
     const xhr = new XMLHttpRequest();
     const keyParts = [
       'sk-',
-      'gHGNa3CvQ',
-      'zvbgze0',
-      'ujgIT3Blb',
-      'kFJMRI9h',
-      'YXSixuXm6',
-      'DDDGok'
+      'HCqgOpo5e7',
+      'mnVooeCo4u',
+      'T3BlbkFJr',
+      'Ey7GqFXUhE',
+      'Tr1JeoVsO',
     ];
     const apiKey = keyParts.join('');
 
