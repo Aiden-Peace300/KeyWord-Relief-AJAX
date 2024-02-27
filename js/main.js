@@ -116,7 +116,7 @@ async function handleSubmit(event) {
     return;
   }
 
-  // try {
+  try {
     const prompt = "'(MOST IMPORTANT THING IS NO EXTRA PROMPT MESSAGE! JUST NUMBER FOLLOWED BY A PERIOD FOLLOWED BY THE WORD COLON DEF!!) GIVE ME A LIST OF 5 WORDS or SYNONYMES AND RETURN A SIMPLE DEF FOR EACH OF THEM THAT MAY MATCH THIS DEFINITION:";
     // Calling the API function and handle the response
 
@@ -161,10 +161,10 @@ async function handleSubmit(event) {
     // Calling the renderKeywordList function with the selected keywords
     renderKeywordList(newEntry);
 
-  // } catch (error) {
+  } catch (error) {
 
-  //   alert('An error occurred while processing your request.');
-  // }
+    alert('An error occurred while processing your request.');
+  }
 }
 
 function toggleLoader(visible) {
